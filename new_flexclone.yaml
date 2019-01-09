@@ -24,7 +24,7 @@
 
   - name: Create junction path
     na_ontap_command:
-      hostname: netappcluster02
+      hostname: netappcluster
       username: admin
       password: password
       command: ['volume mount -vserver ansiblevserver -volume '{{ flexclone_name }}' -junction-path /']
