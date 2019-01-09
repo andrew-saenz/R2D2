@@ -1,0 +1,31 @@
+---
+- name: Create FlexVol
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: "flexclone_name"
+      prompt: "flexclone_name"
+      private: no
+
+  tasks:
+  - name: Create FlexVol clone
+    na_ontap_volume_clone:
+      parent_volume: ansibleVol
+      volume: '{{ flexclone_name }}'
+      vserver: ansiblevserver
+      hostname: netappcluster
+      username: admin
+      password: password
+
+  - name: Wait for volume to be created
+    pause:
+      minutes: 1
+
+  - name: Create junction path
+    na_ontap_command:
+      hostname: netappcluster02
+      username: admin
+      password: password
+      command: ['volume mount -vserver ansiblevserver -volume '{{ flexclone_name }}' -junction-path /']
+
